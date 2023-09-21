@@ -62,25 +62,24 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
 
   if (x >= width || y >= height)
     return;
-
-  uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
   
   float mx0 = ((float)x / (float)width) * 3.5 - 2.5;
   float my0 = ((float)y / (float)height )* 2 - 1;
   float mx = 0.0f;
   float my = 0.0f;
   int i = 0;
-  while (mx*mx + my*my < 2*2  && i < N) {
+  while (mx*mx + my*my < 2*2  & i < N) {
     float mxtemp = mx*mx - my*my + mx0;
     my = 2*mx*my + my0;
     mx = mxtemp;
     i++;
   }
 
+  uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
   float    v       = (float)i / (float)N;
   uint8_t  grayv   = v * 255;
 
-  lineptr[x] = {grayv,grayv,grayv,255};
+  lineptr[x] = (uchar4)heat_lut(x);
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
