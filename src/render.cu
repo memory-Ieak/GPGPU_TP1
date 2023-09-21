@@ -68,11 +68,21 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
     return;
 
   uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
-  float    v       = (x * x + y * y) / denum;
-  uint8_t  grayv   = v * 255;
+  
+  int N = 100
+  float mx0 = ((float)x / (float)width) * 3.5 - 2.5;
+  float my0 = ((float)y / (float)height )* 2 - 1;
+  float mx = 0.0;
+  float my = 0.0;
+  int i = 0;
+  while (mx*mx + my*my < 2*2  && i < N) {
+    int mxtemp = mx*mx - my*my + mx0;
+    my = 2*mx*my + my0;
+    mx = mxtemp;
+    i++;
+  }
 
-
-  lineptr[x] = {grayv, grayv, grayv, 255};
+  lineptr[x] = palette(i);
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
