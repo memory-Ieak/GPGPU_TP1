@@ -76,7 +76,8 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
   }
 
   uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
-  rgba8_t  colorv   = heat_lut(mx0);
+  float    v       = (float)i / (float)N;
+  rgba8_t  colorv   = heat_lut(v);
 
   lineptr[x] = {colorv.r, colorv.g, colorv.b, colorv.a};
 }
