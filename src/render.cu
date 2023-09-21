@@ -2,6 +2,8 @@
 #include <spdlog/spdlog.h>
 #include <cassert>
 
+int N = 100;
+
 [[gnu::noinline]]
 void _abortError(const char* msg, const char* fname, int line)
 {
@@ -50,7 +52,7 @@ rgba8_t heat_lut(float x)
   }
 }
 
-rgba24 palette(int x)
+uchar4 palette(int x)
 {
   uint8_t v = 255 * x / N;
   return {v,v,v,255};
@@ -69,7 +71,6 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
 
   uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
   
-  int N = 100
   float mx0 = ((float)x / (float)width) * 3.5 - 2.5;
   float my0 = ((float)y / (float)height )* 2 - 1;
   float mx = 0.0;
