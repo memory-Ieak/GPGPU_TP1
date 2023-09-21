@@ -67,17 +67,18 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
   
   float mx0 = ((float)x / (float)width) * 3.5 - 2.5;
   float my0 = ((float)y / (float)height )* 2 - 1;
-  float mx = 0.0;
-  float my = 0.0;
+  float mx = 0.0f;
+  float my = 0.0f;
   int i = 0;
   while (mx*mx + my*my < 2*2  && i < N) {
-    int mxtemp = mx*mx - my*my + mx0;
+    float mxtemp = mx*mx - my*my + mx0;
     my = 2*mx*my + my0;
     mx = mxtemp;
     i++;
   }
 
-  uint8_t v = 255 * x / N;
+  float    v       = (float)i / (float)N;
+  uint8_t  grayv   = v * 255;
 
   lineptr[x] = {v,v,v,255};
 }
