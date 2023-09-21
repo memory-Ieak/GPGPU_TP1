@@ -2,8 +2,6 @@
 #include <spdlog/spdlog.h>
 #include <cassert>
 
-int N = 100;
-
 [[gnu::noinline]]
 void _abortError(const char* msg, const char* fname, int line)
 {
@@ -52,12 +50,6 @@ rgba8_t heat_lut(float x)
   }
 }
 
-uchar4 palette(int x)
-{
-  uint8_t v = 255 * x / N;
-  return {v,v,v,255};
-}
-
 // Device code
 __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
 {
@@ -65,6 +57,8 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
 
   int x = blockDim.x * blockIdx.x + threadIdx.x;
   int y = blockDim.y * blockIdx.y + threadIdx.y;
+
+  int N = 100;
 
   if (x >= width || y >= height)
     return;
@@ -83,7 +77,9 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
     i++;
   }
 
-  lineptr[x] = palette(i);
+  uint8_t v = 255 * x / N;
+
+  lineptr[x] = {v,v,v,255};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
