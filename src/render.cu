@@ -76,9 +76,9 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
   }
 
   uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
-  rgba8_t  grayv   = heat_lut(x);
+  rgba8_t  colorv   = heat_lut(x);
 
-  lineptr[x] = {grayv.r, grayv.g, grayv.b, grayv.a};
+  lineptr[x] = {colorv.r, colorv.g, colorv.b, colorv.a};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
