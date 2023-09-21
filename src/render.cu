@@ -50,6 +50,12 @@ rgba8_t heat_lut(float x)
   }
 }
 
+rgba24 palette(int x)
+{
+  uint8_t v = 255 * x / N;
+  return {v,v,v,255};
+}
+
 // Device code
 __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
 {
