@@ -80,7 +80,7 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
   float    v       = (float)i / (float)N;
   uint8_t  grayv   = v * 255;
 
-  lineptr[x] = {v,v,v,255};
+  lineptr[x] = {grayv,grayv,grayv,255};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
