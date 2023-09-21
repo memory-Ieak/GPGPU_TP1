@@ -21,7 +21,7 @@ struct rgba8_t {
   std::uint8_t a;
 };
 
-rgba8_t heat_lut(float x)
+__device__ rgba8_t heat_lut(float x)
 {
   assert(0 <= x && x <= 1);
   float x0 = 1.f / 4.f;
@@ -76,10 +76,9 @@ __global__ void mykernel(char* buffer, int width, int height, size_t pitch)
   }
 
   uchar4*  lineptr = (uchar4*)(buffer + y * pitch);
-  float    v       = (float)i / (float)N;
-  uint8_t  grayv   = v * 255;
+  rgba8_t  grayv   = heat_lut(x);
 
-  lineptr[x] = (uchar4)heat_lut(x);
+  lineptr[x] = {grayv.r, grayv.g, grayv.b, grayv.a};
 }
 
 void render(char* hostBuffer, int width, int height, std::ptrdiff_t stride, int n_iterations)
